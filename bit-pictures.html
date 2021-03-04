@@ -133,15 +133,28 @@
             return numbers.join(' ');
         }
 
+        function getHashNumbers() {
+            return window.location.hash.substr(1).replaceAll('%20', ' ');
+        }
+
         function App() {
-            const [input, setInput] = React.useState('153 36 66 153 153 66 36 153');
+            const [input, setInput] = React.useState(getHashNumbers() ? getHashNumbers() : '153 36 66 153 153 66 36 153');
 
             function handleClick(numberIndex, bitIndex) {
-                setInput(toggleBitOfSpecificNumber(input, numberIndex, bitIndex));
+                saveNumbers(toggleBitOfSpecificNumber(input, numberIndex, bitIndex));
             }
 
             function handleReset() {
-                setInput('0 '.repeat(8));
+                saveNumbers('0 '.repeat(8));
+            }
+
+            function handleInput(e) {
+                saveNumbers(e.target.value);
+            }
+
+            function saveNumbers(numbersStr) {
+                setInput(numbersStr);
+                window.location.hash = `#${numbersStr}`;
             }
 
             return <>
@@ -152,7 +165,7 @@
                             id="numberInput"
                             type="text"
                             value={input}
-                            onChange={e => setInput(e.target.value)}/>
+                            onChange={handleInput}/>
                     </label>
                 </div>
                 <BitArray numbers={getParsedNumbers(input)} handleClick={handleClick}/>
