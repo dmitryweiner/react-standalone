@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>React.js</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="libraries/react.development.js"></script>
+    <script src="libraries/react-dom.development.js"></script>
+    <script src="libraries/babel.min.js"></script>
+    <style type="text/css">
+        #wrapper {
+            padding: 20px;
+            text-align: center;
+        }
+
+        #root {
+            width: 800px;
+            margin: 0 auto;
+        }
+
+        @media screen and (max-width: 900px) {
+            #root {
+                width: calc(100% - 20px);
+            }
+
+            #wrapper {
+                margin: 0 10px;
+            }
+        }
+
+        .bit-map {
+            margin: 20px auto;
+            width: 300px;
+        }
+
+        .bit-row {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .bit-row div {
+            width: 40px;
+            height: 40px;
+            background-color: aliceblue;
+        }
+
+        .bit-row div.bit-1 {
+            background-color: black;
+        }
+
+        input#numberInput {
+            width: 300px;
+        }
+
+    </style>
+    <script type="text/babel">
+
+
+        function BitRow({number, numberIndex, handleClick}) {
+            const bitNumber = getBinaryNumber(number);
+            return <div className="bit-row">
+                {bitNumber.split('').map((digit, index) => (
+                    <div
+                        key={index}
+                        className={digit === '1' ? 'bit-1' : 'bit-0'}
+                        onClick={() => handleClick(numberIndex, index)}/>
+                ))}
+            </div>;
+        }
+
+        function BitArray({numbers, handleClick}) {
+            return <div className="bit-map">
+                {numbers.map((number, index) => (
+                    <BitRow
+                        key={index}
+                        number={number}
+                        numberIndex={index}
+                        handleClick={handleClick}/>
+                ))}
+            </div>;
+        }
+
+        /**
+         * Т.к. строки иммутабельны, функция по замене нужного символа
+         **/
+        function setCharAt(str, index, chr) {
+            if (index > str.length - 1) return str;
+            return str.substring(0, index) + chr + str.substring(index + 1);
+        }
+
+        /**
+         * Возвращает бинарную строку, выравненную нулями
+         **/
+        function getBinaryNumber(numberString) {
+            return Number(numberString).toString(2).padStart(8, '0');
+        }
+
+        function getParsedNumbers(inputString) {
+            const numbers = inputString.split(' ');
+            numbers.splice(8);
+            return numbers.map(number => Number(number) % 256);
+        }
+
+        /**
+         *
+         * @param {number} number
+         * @param {number} bitIndex старший бит 0, младший 7
+         * @return {number}
+         */
+        function toggleSpecificBit(number, bitIndex) {
+            let numberStr = getBinaryNumber(number);
+            numberStr = setCharAt(
+                numberStr,
+                bitIndex,
+                numberStr[bitIndex] === '1' ? '0' : '1'
+            );
+            return parseInt(numberStr, 2);
+        }
+
+        /**
+         *
+         * @param {string} numbersString
+         * @param {number} numberIndex
+         * @param {number} bitIndex
+         * @return {string}
+         */
+        function toggleBitOfSpecificNumber(numbersString, numberIndex, bitIndex) {
+            const numbers = getParsedNumbers(numbersString);
+            numbers[numberIndex] = toggleSpecificBit(numbers[numberIndex], bitIndex);
+            return numbers.join(' ');
+        }
+
+        function App() {
+            const [input, setInput] = React.useState('153 36 66 153 153 66 36 153');
+
+            function handleClick(numberIndex, bitIndex) {
+                setInput(toggleBitOfSpecificNumber(input, numberIndex, bitIndex));
+            }
+
+            return <>
+                <div>
+                    <label>
+                        Введите числа &lt;= 255, разделённые пробелами: <br/>
+                        <input
+                            id="numberInput"
+                            type="text"
+                            value={input}
+                            onChange={e => setInput(e.target.value)}/>
+                    </label>
+                </div>
+                <BitArray numbers={getParsedNumbers(input)} handleClick={handleClick}/>
+            </>;
+        }
+
+        ReactDOM.render(<App/>, document.getElementById('root'));
+    </script>
+</head>
+<body>
+<div id="wrapper">
+    <div id="root"></div>
+</div>
+</body>
+</html>
