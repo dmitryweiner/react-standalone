@@ -140,6 +140,10 @@
                 setInput(toggleBitOfSpecificNumber(input, numberIndex, bitIndex));
             }
 
+            function handleReset() {
+                setInput('0 '.repeat(8));
+            }
+
             return <>
                 <div>
                     <label>
@@ -152,6 +156,9 @@
                     </label>
                 </div>
                 <BitArray numbers={getParsedNumbers(input)} handleClick={handleClick}/>
+                <div>
+                    <button onClick={handleReset}>Сбросить!</button>
+                </div>
             </>;
         }
 
