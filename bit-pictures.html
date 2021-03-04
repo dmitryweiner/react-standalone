@@ -154,7 +154,7 @@
 
             function saveNumbers(numbersStr) {
                 setInput(numbersStr);
-                window.location.hash = `#${numbersStr}`;
+                setTimeout(function(){ window.location.hash = `#${numbersStr}`; }, 250);
             }
 
             return <>
