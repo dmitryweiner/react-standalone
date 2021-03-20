@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>React.js</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="libraries/react.development.js"></script>
+    <script src="libraries/react-dom.development.js"></script>
+    <script src="libraries/redux.js"></script>
+    <script src="libraries/react-redux.js"></script>
+    <script src="libraries/babel.min.js"></script>
+    <style type="text/css">
+        #wrapper {
+            padding: 20px;
+            text-align: center;
+        }
+
+        #root {
+            width: 800px;
+            margin: 0 auto;
+        }
+    </style>
+    <script type="text/babel">
+        const ACTION_INC = 'inc';
+        const ACTION_DEC = 'dec';
+        const actionInc = () => ({
+            type: ACTION_INC,
+        });
+        const actionDec = () => ({
+            type: ACTION_DEC,
+        });
+        const initialState = {
+            counter: 0
+        };
+        function reducer(state = initialState, action) {
+            switch (action.type) {
+                case ACTION_INC: {
+                    return {
+                        ...state,
+                        counter: state.counter + 1
+                    };
+                }
+                case ACTION_DEC: {
+                    return {
+                        ...state,
+                        counter: state.counter - 1
+                    };
+                }
+                default: {
+                    return state;
+                }
+            }
+        }
+        const store = Redux.createStore(reducer);
+        function App() {
+            const dispatch = ReactRedux.useDispatch();
+            const counter = ReactRedux.useSelector(state => state.counter);
+            return (
+                <>
+                    <button onClick={() => dispatch(actionDec())}>-</button>
+                    {counter}
+                    <button onClick={() => dispatch(actionInc())}>+</button>
+                </>
+            );
+        }
+        const rootElement = document.getElementById('root');
+        ReactDOM.render(
+            <ReactRedux.Provider store={store}>
+                <App />
+            </ReactRedux.Provider>,
+            rootElement
+        );
+    </script>
+</head>
+<body>
+<div id="wrapper">
+    <div id="root"></div>
+</div>
+</body>
+</html>
