@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8">
+    <title>React.js</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="libraries/react.development.js"></script>
+    <script src="libraries/react-dom.development.js"></script>
+    <script src="libraries/babel.min.js"></script>
+    <style type="text/css">
+        #wrapper {
+            padding: 20px;
+            text-align: center;
+        }
+
+        #root {
+            width: 800px;
+            margin: 0 auto;
+        }
+    </style>
+    <script type="text/babel">
+
+        let counterCalled = 0;
+
+        function App() {
+            const [list, setList] = React.useState([]);
+            const [input, setInput] = React.useState('');
+
+            function add() {
+                const newElement = {
+                    id: Math.random().toString(36).substr(2),
+                    title: input,
+                    isChecked: false
+                };
+
+                setList([...list, newElement]);
+            }
+
+            function remove(id) {
+                setList([...list.filter(element => element.id !== id)]);
+            }
+
+            function check(id) {
+                setList([...list.map(element => {
+                    if (element.id !== id) {
+                        return element;
+                    }
+                    return {...element, isChecked: !element.isChecked}
+                })]);
+            }
+
+            function submit(e) {
+                e.preventDefault();
+                if (input.trim().length === 0) return;
+                add();
+                setInput('');
+            }
+
+            function getCount(list) {
+                console.log('counter called ', ++counterCalled);
+                return list.length;
+            }
+
+            //const count = React.useMemo(() => getCount(list), [list]);
+
+            return <>
+                <h3>Список дел</h3>
+                <form onSubmit={submit}>
+                    <label>
+                        Введите название дела:
+                        <input type="text" value={input} onChange={e => setInput(e.target.value)} />
+                    </label>
+                    <button type="submit">Сохранить</button>
+                </form>
+                <ul>
+                    {list.map(item => (
+                        <li key={item.id}>
+                            <input type="checkbox" checked={item.isChecked} onChange={() => check(item.id)}/>
+                            {item.title}
+                            <button onClick={() => remove(item.id)}>[x]</button>
+                        </li>
+                    ))}
+                </ul>
+                {/* <span>Всего: {count}</span> */}
+                <span>Всего: {getCount(list)}</span>
+            </>;
+        }
+
+        ReactDOM.render(<App/>, document.getElementById('root'));
+    </script>
+</head>
+<body>
+<div id="wrapper">
+    <div id="root"></div>
+</div>
+</body>
+</html>
