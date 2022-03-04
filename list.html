@@ -24,9 +24,16 @@
 
         let counterCalled = 0;
 
+        const FILTER = {
+            ALL: "Все",
+            DONE: "Сделанные",
+            NOT_DONE: "Не сделанные"
+        };
+
         function App() {
             const [list, setList] = React.useState([]);
             const [input, setInput] = React.useState('');
+            const [filter, setFilter] = React.useState(FILTER.ALL);
 
             function add() {
                 const newElement = {
@@ -58,33 +65,52 @@
                 setInput('');
             }
 
-            function getCount(list) {
-                console.log('counter called ', ++counterCalled);
-                return list.length;
+            function getFiltered(currentFilter = filter) {
+                switch (currentFilter) {
+                    case FILTER.ALL:
+                        return list;
+                    case FILTER.DONE:
+                        return list.filter(item => item.isChecked);
+                    case FILTER.NOT_DONE:
+                        return list.filter(item => !item.isChecked);
+                }
             }
-
-            //const count = React.useMemo(() => getCount(list), [list]);
 
             return <>
                 <h3>Список дел</h3>
                 <form onSubmit={submit}>
                     <label>
                         Введите название дела:
-                        <input type="text" value={input} onChange={e => setInput(e.target.value)} />
+                        <input type="text" value={input} onChange={e => setInput(e.target.value)}/>
                     </label>
                     <button type="submit">Сохранить</button>
                 </form>
+                <label>
+                    <input
+                        type="radio" name="filter" value="Все" checked={filter === FILTER.ALL} onChange={() => setFilter(FILTER.ALL)}/>
+                    Все ({list.length})
+                </label>
+                <label>
+                    <input
+                        type="radio" name="filter" value="Сделанные" checked={filter === FILTER.DONE} onChange={() => setFilter(FILTER.DONE)}/>
+                    Сделанные ({getFiltered(FILTER.DONE).length})
+                </label>
+                <label>
+                    <input
+                        type="radio" name="filter" value="Не сделанные" checked={filter === FILTER.NOT_DONE} onChange={() => setFilter(FILTER.NOT_DONE)}/>
+                    Не сделанные ({getFiltered(FILTER.NOT_DONE).length})
+                </label>
                 <ul>
-                    {list.map(item => (
+                    {getFiltered().map(item => (
                         <li key={item.id}>
-                            <input type="checkbox" checked={item.isChecked} onChange={() => check(item.id)}/>
-                            {item.title}
+                            <label>
+                                <input type="checkbox" checked={item.isChecked} onChange={() => check(item.id)}/>
+                                {item.title}
+                            </label>
                             <button onClick={() => remove(item.id)}>[x]</button>
                         </li>
                     ))}
                 </ul>
-                {/* <span>Всего: {count}</span> */}
-                <span>Всего: {getCount(list)}</span>
             </>;
         }
 
