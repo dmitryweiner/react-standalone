@@ -4,6 +4,6 @@
 Код транспилируется прямо в браузере благодаря библиотеке Babel.js.
 
 ### Живые примеры:
-* [Счётчик](https://dmitryweiner.github.io/907sv-react/counter.html).
-* [Показ валют](https://dmitryweiner.github.io/907sv-react/currency.html).
-* [Бинарный редактор картинок](https://dmitryweiner.github.io/907sv-react/bit-pictures.html).
+* [Счётчик](https://dmitryweiner.github.io/react-standalone/counter.html).
+* [Показ валют](https://dmitryweiner.github.io/react-standalone/currency.html).
+* [Бинарный редактор картинок](https://dmitryweiner.github.io/react-standalone/bit-pictures.html).
