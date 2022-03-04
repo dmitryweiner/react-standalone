@@ -19,6 +19,49 @@
             width: 800px;
             margin: 0 auto;
         }
+
+        .filter {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        ul {
+            width: 40%;
+            margin: 10px auto;
+            padding: 0;
+            text-align: left;
+            marker: none;
+        }
+
+        ul li {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+        }
+
+        ul li label {
+            flex: 1;
+        }
+
+        @media screen and (max-width: 800px) {
+            #root {
+                width: 100%;
+                margin: 0;
+            }
+
+            form input {
+                width: 60%;
+            }
+
+            ul {
+                width: 100%;
+                margin: 0;
+            }
+
+        }
     </style>
     <script type="text/babel">
 
@@ -77,29 +120,33 @@
             }
 
             return <>
-                <h3>Список дел</h3>
+                <h3>Todo list</h3>
                 <form onSubmit={submit}>
                     <label>
-                        Введите название дела:
                         <input type="text" value={input} onChange={e => setInput(e.target.value)}/>
                     </label>
-                    <button type="submit">Сохранить</button>
+                    <button type="submit">Save</button>
                 </form>
-                <label>
-                    <input
-                        type="radio" name="filter" value="Все" checked={filter === FILTER.ALL} onChange={() => setFilter(FILTER.ALL)}/>
-                    Все ({list.length})
-                </label>
-                <label>
-                    <input
-                        type="radio" name="filter" value="Сделанные" checked={filter === FILTER.DONE} onChange={() => setFilter(FILTER.DONE)}/>
-                    Сделанные ({getFiltered(FILTER.DONE).length})
-                </label>
-                <label>
-                    <input
-                        type="radio" name="filter" value="Не сделанные" checked={filter === FILTER.NOT_DONE} onChange={() => setFilter(FILTER.NOT_DONE)}/>
-                    Не сделанные ({getFiltered(FILTER.NOT_DONE).length})
-                </label>
+                <div className="filter">
+                    <label>
+                        <input
+                            type="radio" name="filter" value="Все" checked={filter === FILTER.ALL}
+                            onChange={() => setFilter(FILTER.ALL)}/>
+                        All ({list.length})
+                    </label>
+                    <label>
+                        <input
+                            type="radio" name="filter" value="Сделанные" checked={filter === FILTER.DONE}
+                            onChange={() => setFilter(FILTER.DONE)}/>
+                        Done ({getFiltered(FILTER.DONE).length})
+                    </label>
+                    <label>
+                        <input
+                            type="radio" name="filter" value="Не сделанные" checked={filter === FILTER.NOT_DONE}
+                            onChange={() => setFilter(FILTER.NOT_DONE)}/>
+                        Not done ({getFiltered(FILTER.NOT_DONE).length})
+                    </label>
+                </div>
                 <ul>
                     {getFiltered().map(item => (
                         <li key={item.id}>
